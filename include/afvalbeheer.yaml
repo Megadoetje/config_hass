@@ -1,1 +1,20 @@
+## https://github.com/pippyn/Home-Assistant-Sensor-Afvalbeheer ##
 
+sensor:
+ - platform: afvalbeheer
+   wastecollector: Cyclus           (required)
+   resources:                       (at least 1 required)
+     - restafval
+     - gft
+     - papier
+     - pmd
+   postcode: 2481LW                 (required)
+   streetnumber: 1                  (required)
+   upcomingsensor: 0                (optional)
+   dateformat: '%d-%m-%Y'           (optional)
+   dateonly: 0                      (optional)
+   name: ''                         (optional)
+   nameprefix: 1                    (optional)
+   builtinicons: 0                  (optional)
+   disableicons: 0                  (optional)
+   dutch: 1                         (optional)
