@@ -1,6 +1,13 @@
 # Core Configuration
 #homeassistant: !include includes/homeassistant.yaml
 default_config:
+
+  - name: Woubrugge 
+    latitude: 32.8793367
+    longitude: -117.2474053
+    radius: 100
+    icon: mdi:account-multiple
+
 frontend:
   themes: !include_dir_merge_named themes
 http: !include includes/http.yaml
