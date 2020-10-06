@@ -1,30 +1,14 @@
-# Core Configuration
-#homeassistant: !include includes/homeassistant.yaml
 default_config:
 
-  - name: Woubrugge 
-    latitude: 32.8793367
-    longitude: -117.2474053
-    radius: 100
-    icon: mdi:account-multiple
+tts:
+  - platform: google_translate
 
 frontend:
   themes: !include_dir_merge_named themes
 
-#http: !include includes/http.yaml
+sensor: !include_dir_merge_list sensor
+automation: !include_dir_merge_list automation
 
-# Logging and history
-#logger: !include includes/logger.yaml
-#recorder: !include includes/recorder.yaml
-#device_tracker: !include includes/device_trackers.yaml
-
-# Managed via UI
-#scene: !include scenes.yaml
-#automation: !include automations.yaml
+#group: !include groups.yaml
 #script: !include scripts.yaml
-
-# Others
-#person: !include includes/persons.yaml
-zone: !include includes/zones.yaml
-#spotify: !include includes/spotify.yaml
-afvalbeheer: !include includes/afvalbeheer.yaml
+#scene: !include scenes.yaml
