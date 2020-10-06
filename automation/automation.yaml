@@ -1,0 +1,197 @@
+#########################################################
+#                                                       #
+#      NOTIFY Verjaardagen                              #
+#                                                       #
+#########################################################
+
+- alias: "Verjaardagen Notification"
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id:
+        - sensor.birthday
+  condition:
+    - condition: template
+      value_template: "{{ states('sensor.birthday') != 'unknown' }}"
+    - condition: template
+      value_template: "{{ states.sensor.birthday.state | trim != '' }}"
+  action:
+    - service: notify.mobile_app_dennis_oneplus
+      data:
+        message: 'Vandaag: {{ states.sensor.birthday.state }}'
+        title: '{{ states.sensor.birthday.state }}'
+    - service: notify.mobile_app_marijke_htc
+      data:
+        message: 'Vandaag: {{ states.sensor.birthday.state }}'
+        title: '{{ states.sensor.birthday.state }}'
+
+#########################################################
+#                                                       #
+#      NOTIFY Afvalbeheer grijze container              #
+#                                                       #
+#########################################################
+
+- alias: "Grijze container Notification"
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id:
+        - sensor.cyclus_restafval
+  condition:
+    - condition: template
+      value_template: '{{ states.sensor.cyclus_restafval.state.split(", ")[0] == "Morgen" }}'
+  action:
+    - service: notify.mobile_app_dennis_oneplus
+      data:
+        message: 'Morgen grijze container'
+        title: '{{ states.sensor.cyclus_restafval.state }}'
+    - service: notify.mobile_app_marijke_htc
+      data:
+        message: 'Morgen grijze container'
+        title: '{{ states.sensor.cyclus_restafval.state }}'
+
+#########################################################
+#                                                       #
+#      NOTIFY Afvalbeheer groene container              #
+#                                                       #
+#########################################################
+
+- alias: "Groene container Notification"
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id:
+        - sensor.cyclus_gft
+  condition:
+    - condition: template
+      value_template: '{{ states.sensor.cyclus_gft.state.split(", ")[0] == "Morgen" }}'
+  action:
+    - service: notify.mobile_app_dennis_oneplus
+      data:
+        message: 'Morgen groene container'
+        title: '{{ states.sensor.cyclus_gft.state }}'
+    - service: notify.mobile_app_marijke_htc
+      data:
+        message: 'Morgen groene container'
+        title: '{{ states.sensor.cyclus_gft.state }}'
+
+#########################################################
+#                                                       #
+#      NOTIFY Afvalbeheer plastic afval.                #
+#                                                       #
+#########################################################
+
+- alias: "Plastic afval Notification"
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id:
+        - sensor.cyclus_pmd
+  condition:
+    - condition: template
+      value_template: '{{ states.sensor.cyclus_pmd.state.split(", ")[0] == "Morgen" }}'
+  action:
+    - service: notify.mobile_app_dennis_oneplus
+      data:
+        message: 'Morgen plastic afval'
+        title: '{{ states.sensor.cyclus_pmd.state }}'
+    - service: notify.mobile_app_marijke_htc
+      data:
+        message: 'Morgen plastic afval'
+        title: '{{ states.sensor.cyclus_pmd.state }}'
+
+#########################################################
+#                                                       #
+#      Lichten aan bij schermer                         #
+#                                                       #
+#########################################################
+
+- alias: "Lichten aan bij schemer"
+  trigger:
+    - platform: numeric_state
+      entity_id: 
+        - sensor.licht_sensor_illuminance_lux
+      below: 350
+      for:
+        minutes: 3
+  condition:
+    condition: and
+    conditions:
+        - condition: time
+          before: '21:00'
+        - condition: time
+          after: '06:30'
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: 
+        - light.tv_hoek
+        - light.serre
+ 
+#########################################################
+#                                                       #
+#      Lichten aan door schakelaar                      #
+#                                                       #
+#########################################################
+
+- alias: "Lichten aan door schakelaar"
+  trigger:
+    platform: state
+    entity_id: sensor.schakelaar_zigbee_click
+    to: 'single'
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: 
+        - light.tv_hoek
+        - light.serre
+
+#########################################################
+#                                                       #
+#      Lichten uit door schakelaar                      #
+#                                                       #
+#########################################################
+
+- alias: "Lichten uit door schakelaar"
+  trigger:
+    platform: state
+    entity_id: sensor.schakelaar_zigbee_click
+    to: 'single'
+  condition:
+    condition: and
+    conditions:
+        - condition: state
+          entity_id: light.tv_hoek
+          state: 'on'
+  action:
+    - service: light.turn_off
+      data:
+        entity_id: 
+        - light.tv_hoek
+        - light.serre
+        
+#########################################################
+#                                                       #
+#      Lichten uit als het licht is                     #
+#                                                       #
+#########################################################
+
+- alias: "Lichten uit bij licht"
+  trigger:
+    - platform: numeric_state
+      entity_id: 
+        - sensor.licht_sensor_illuminance_lux
+      above: 350
+      for:
+        minutes: 10
+  action:
+    - service: light.turn_off
+      data:
+        entity_id: 
+        - light.tv_hoek
+        - light.serre
+        - light.tv_hoek_bovenlampen
+        
+    
+        
+        
